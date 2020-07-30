@@ -29,26 +29,25 @@ def index():
 
 @app.route('/entries')
 def entries():
-    return render_template('index.html')
+    return render_template('detail.html')
 
 @app.route('/entries/new', methods=('GET','POST'))
 def new_entries():
     form = forms.CreateEntryForm()
-    if form.validate_on_submit():
-        models.Entry.add(journal_title=form.journal_title.data,time_spent=form.time_spent.data,learned=form.learned.data,
-                         remember=form.remember.data, date_time=form.date_time.data)
-        flash("validated")
+    try:
+        form.validate_on_submit()
+        models.Entry.add(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
+                         resourcestoremember=form.ResourcesToRemember.data, date=form.date.data)
+        print("tried")
         return render_template('new.html', form=form)
-    else:
-        print(str(form.journal_title.data) + str(form.learned.data) + str(form.remember.data))
-        print(form.date_time.data)
-
+    except:
+        print("failed to validate form")
     return render_template('new.html', form=form)
 
 
 @app.route('/entries/<id>')
-def get_entries():
-    return render_template('detail.html')
+def get_entries(id):
+    return render_template('detail_'+id+'.html')
 
 @app.route('/entries/<id>/edit')
 def edit_entries():
@@ -60,10 +59,8 @@ def delete_entries():
 
 if __name__ == '__main__':
     models.initialize()
-    try:
-        models.Entry.add(journal_title="Entered", time_spent=1, learned="things", remember="more things", date_time=datetime.datetime.now())
 
-    except:
-        print("failed to create")
+
+
 
 

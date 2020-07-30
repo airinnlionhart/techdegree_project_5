@@ -45,6 +45,29 @@
                         </div>
                     </article>
                 </div>
+                 {% for items in entry %}
+                    <div class="entry-list single">
+                    <article>
+                        <h1>The best day I’ve ever had</h1>
+                        <time datetime="2016-01-31">{{ item.date }}</time>
+                        <div class="entry">
+                            <h3>Time Spent: </h3>
+                            <p>{{ item.timespent }}</p>
+                        </div>
+                        <div class="entry">
+                            <h3>What I Learned:</h3>
+                            <p> {{ item.whatilearn }}</p>
+                        </div>
+                        <div class="entry">
+                            <h3>Resources to Remember:</h3>
+                            <ul>
+                                <li><a href="">{{ item.resourcestoremeber }}</a></li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+
+                {% endfor %}
             </div>
             <div class="edit">
                 <p><a href="edit.html">Edit Entry</a></p>

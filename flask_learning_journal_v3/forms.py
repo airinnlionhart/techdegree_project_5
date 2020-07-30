@@ -1,43 +1,43 @@
 from flask_wtf import FlaskForm
 from wtforms import TextAreaField, StringField, IntegerField, DateField
-from wtforms.validators import data_required
+from wtforms.validators import DataRequired
 #flask-wtf-0.14.3
 
 class JournalEntryForm(FlaskForm):
-    journal_title = StringField(
-        'journal_title',
+    title = StringField(
+        'title',
         validators=[
-            data_required()
+            DataRequired()
         ]
     )
-    time_spent = IntegerField(
-        'time_spent',
+    timeSpent = IntegerField(
+        'timeSpent',
         validators=[
-            data_required()
+            DataRequired()
         ]
     )
-    learned = TextAreaField(
-        'learned',
+    whatILearned = TextAreaField(
+        'whatILearned',
         validators=[
-            data_required()
+            DataRequired()
         ]
     )
-    remember = TextAreaField(
-        'remember',
+    ResourcesToRemember = TextAreaField(
+        'ResourcesToRemember',
         validators=[
-            data_required()
+            DataRequired()
         ]
     )
-    date_time = DateField(
-        'date_time',
+    date = DateField(
+        'date',
         validators=[
-            data_required()
+            DataRequired()
         ]
     )
 
 class CreateEntryForm(FlaskForm):
-    journal_title = StringField('journal_title', validators=[data_required()])
-    time_spent = IntegerField('time_spent', validators=[data_required()])
-    learned = TextAreaField('learned', validators=[data_required()])
-    remember = TextAreaField('remember', validators=[data_required()])
-    date_time = DateField('date_time', validators=[data_required()], format='%m/%d/%Y')
+    title = StringField('title', validators=[DataRequired()])
+    timeSpent = IntegerField('timeSpent', validators=[DataRequired()])
+    whatILearned = TextAreaField('whatILearned', validators=[DataRequired()])
+    ResourcesToRemember = TextAreaField('ResourcesToRemember', validators=[DataRequired()])
+    date = DateField('date', validators=[DataRequired()], format='%Y-%m-%d')

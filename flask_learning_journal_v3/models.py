@@ -8,19 +8,21 @@ DATABASE = SqliteDatabase('journal.db')
 
 class Entry(Model):
     journal_id = IntegerField(primary_key=True)
-    journal_title = TextField()
-    time_spent = IntegerField()
-    learned = TextField()
-    remember = TextField
-    date_time = DateTimeField(default=datetime.datetime.now)
+    title = TextField()
+    timespent = IntegerField()
+    whatilearn = TextField()
+    resourcestoremember = TextField()
+    date = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DATABASE
 
     @classmethod
-    def add(cls, journal_title, time_spent, learned, remember, date_time):
-        cls.create(journal_title=journal_title, time_spent=time_spent,
-                   learned=learned, remember=remember, date_time=date_time)
+    def add(cls, title, timespent, whatilearn, resourcestoremember, date):
+        with DATABASE.transaction():
+            cls.create(title=title, timespent=timespent,
+                       whatilearn=whatilearn, resourcestoremember=resourcestoremember, date=date)
+
 
 def initialize():
     DATABASE.connect()
@@ -52,8 +54,5 @@ def edit():
 if __name__ == '__main__':
     initialize()
     view_all()
-    # add({'journal_title': 'this is my first journal entry',
-    #      'time_spent': 2,
-    #      'learned': 'how to build apps with flask',
-    #      'remember': 'a lot now that I think about it'
-    #      })
+    # Entry.add(title="Entered", timespent=1, whatilearn="things", resourcestoremember="more things",
+    #                  date="2020-07-30")
