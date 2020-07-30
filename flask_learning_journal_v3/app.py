@@ -56,18 +56,20 @@ def get_entries(id):
     return render_template('detail.html', entry=entry)
 
 
-@app.route('/entries/<id>/edit')
+@app.route('/entries/<id>/edit', methods=('GET','POST'))
 def edit_entries(id):
     form = forms.CreateEntryForm()
     entry = models.Entry.select().where(models.Entry.journal_id == id)
     try:
         form.validate_on_submit()
-        entry.update(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
-                         resourcestoremember=form.ResourcesToRemember.data, date=form.date.data).where(models.Entry.journal_id == entry.journal_id).execute()
+        print("at here")
+        models.Entry.update(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
+                     resourcestoremember=form.ResourcesToRemember.data, date=form.date.data).where(models.Entry.journal_id == id).execute()
         return render_template('index.html', entry=entry, form=form)
     except:
+        print(entry)
         print("failed to validate form")
-    return render_template('edit.html', form=form)
+    return render_template('edit.html', entry=entry, form=form)
 
 @app.route('/entries/<id>/delete')
 def delete_entries():

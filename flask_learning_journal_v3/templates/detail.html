@@ -53,7 +53,7 @@
                         <time datetime="2016-01-31">{{ items.date }}</time>
                         <div class="entry">
                             <h3>Time Spent: </h3>
-                            <p>{{ items.timespent }}</p>
+                            <p>{{ items.timespent }} Hours</p>
                         </div>
                         <div class="entry">
                             <h3>What I Learned:</h3>
@@ -62,17 +62,18 @@
                         <div class="entry">
                             <h3>Resources to Remember:</h3>
                             <ul>
-                                <li><a href="">{{ items.resourcestoremeber }}</a></li>
+                                <li><a href="">{{ items.resourcestoremember }}</a></li>
                             </ul>
                         </div>
                     </article>
                 </div>
 
-                {% endfor %}
-                {% endblock %}
+
             </div>
             <div class="edit">
                 <p><a href="http://127.0.0.1:5000/entries/{{items.journal_id}}/edit">Edit Entry</a></p>
+                {% endfor %}
+                {% endblock %}
             </div>
         </section>
         <footer>

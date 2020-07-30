@@ -14,7 +14,7 @@
         <header>
             <div class="container">
                 <div class="site-header">
-                    <a class="logo" href="index.html"><i class="material-icons">library_books</i></a>
+                    <a class="logo" href="http://127.0.0.1:5000/index.html"><i class="material-icons">library_books</i></a>
                     <a class="button icon-right" href="new.html"><span>New Entry</span> <i class="material-icons">add</i></a>
                 </div>
             </div>
@@ -24,27 +24,23 @@
                 <div class="edit-entry">
                     {% block content %}
                     {% for items in entry %}
-                        <article>
-                            <h2><a href="http://127.0.0.1:5000/entries/{{items.journal_id}}">{{ items.title }}</a></h2>
-                        </article>
-                    {% endfor %}
-                    {% endblock %}
                     <h2>Edit Entry</h2>
-                    {% block content %}
+
                     <form method="Post" action="" class="form">
                         <label for="journal_title"> Title</label>
-                        <input id="journal_title" type="text" name="title" value="">
+                        <input id="journal_title" type="text" name="title" value="{{ items.title }}">
                         <label for="date_time">Date</label>
                         <input id="date_time" type="date" name="date"><br>
                         <label for="time_spent"> Time Spent</label>
-                        <input id="time_spent" type="text" name="timeSpent"><br>
+                        <input id="time_spent" type="text" name="timeSpent" value="{{ items.timespent }}"><br>
                         <label for="learned">What I Learned</label>
-                        <textarea id="learned" rows="5" name="whatILearned"></textarea>
-                        <label for="remember">Resources to Remember</label>
-                        <textarea id="remember" rows="5" name="ResourcesToRemember"></textarea>
+                        <textarea id="learned" rows="5" name="whatILearned" >{{ items.whatilearn }}</textarea>
+                        <label for="remember" >Resources to Remember</label>
+                        <textarea id="remember" rows="5" name="ResourcesToRemember" >{{ items.resourcestoremember }}</textarea>
                         <input type="submit"  id ="submit"   value="Publish Entry" class="button">
                         <a href="#" class="button button-secondary">Cancel</a>
                     </form>
+                    {% endfor %}
                     {% endblock %}
                 </div>
             </div>

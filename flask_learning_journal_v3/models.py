@@ -12,7 +12,7 @@ class Entry(Model):
     timespent = IntegerField()
     whatilearn = TextField()
     resourcestoremember = TextField()
-    date = DateTimeField(default=datetime.datetime.now)
+    date = DateTimeField(default=datetime.datetime.now())
 
     class Meta:
         database = DATABASE
@@ -36,13 +36,6 @@ def view_all():
         print(stuff)
 
 
-def edit(entry):
-
-    for items in entry:
-        try:
-            Entry.update(journal_entry=user_text).where(Entry.journal_id == entry.journal_id).execute()
-        except:
-            print("something went wrong")
 
 
 
