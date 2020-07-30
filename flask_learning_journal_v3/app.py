@@ -23,13 +23,18 @@ def after_request(response):
     g.db.close()
     return response
 
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    entry = models.Entry.select()
+    return render_template('index.html', entry=entry)
+
 
 @app.route('/entries')
 def entries():
-    return render_template('detail.html')
+    entry = models.Entry.select()
+    return render_template('index.html', entry=entry)
+
 
 @app.route('/entries/new', methods=('GET','POST'))
 def new_entries():
@@ -47,11 +52,22 @@ def new_entries():
 
 @app.route('/entries/<id>')
 def get_entries(id):
-    return render_template('detail_'+id+'.html')
+    entry = models.Entry.select().where(models.Entry.journal_id == id)
+    return render_template('detail.html', entry=entry)
+
 
 @app.route('/entries/<id>/edit')
-def edit_entries():
-    return render_template('edit.html')
+def edit_entries(id):
+    form = forms.CreateEntryForm()
+    entry = models.Entry.select().where(models.Entry.journal_id == id)
+    try:
+        form.validate_on_submit()
+        entry.update(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
+                         resourcestoremember=form.ResourcesToRemember.data, date=form.date.data).where(models.Entry.journal_id == entry.journal_id).execute()
+        return render_template('index.html', entry=entry, form=form)
+    except:
+        print("failed to validate form")
+    return render_template('edit.html', form=form)
 
 @app.route('/entries/<id>/delete')
 def delete_entries():

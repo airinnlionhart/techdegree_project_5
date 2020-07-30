@@ -22,21 +22,30 @@
         <section>
             <div class="container">
                 <div class="edit-entry">
+                    {% block content %}
+                    {% for items in entry %}
+                        <article>
+                            <h2><a href="http://127.0.0.1:5000/entries/{{items.journal_id}}">{{ items.title }}</a></h2>
+                        </article>
+                    {% endfor %}
+                    {% endblock %}
                     <h2>Edit Entry</h2>
-                    <form>
-                        <label for="title"> Title</label>
-                        <input id="title" type="text" name="title"><br>
-                        <label for="date">Date</label>
-                        <input id="date" type="date" name="date"><br>
-                        <label for="time-spent"> Time Spent</label>
-                        <input id="time-spent" type="text" name="timeSpent"><br>
-                        <label for="what-i-learned">What I Learned</label>
-                        <textarea id="what-i-learned" rows="5" name="whatILearned"></textarea>
-                        <label for="resources-to-remember">Resources to Remember</label>
-                        <textarea id="resources-to-remember" rows="5" name="ResourcesToRemember"></textarea>
-                        <input type="submit" value="Publish Entry" class="button">
+                    {% block content %}
+                    <form method="Post" action="" class="form">
+                        <label for="journal_title"> Title</label>
+                        <input id="journal_title" type="text" name="title" value="">
+                        <label for="date_time">Date</label>
+                        <input id="date_time" type="date" name="date"><br>
+                        <label for="time_spent"> Time Spent</label>
+                        <input id="time_spent" type="text" name="timeSpent"><br>
+                        <label for="learned">What I Learned</label>
+                        <textarea id="learned" rows="5" name="whatILearned"></textarea>
+                        <label for="remember">Resources to Remember</label>
+                        <textarea id="remember" rows="5" name="ResourcesToRemember"></textarea>
+                        <input type="submit"  id ="submit"   value="Publish Entry" class="button">
                         <a href="#" class="button button-secondary">Cancel</a>
                     </form>
+                    {% endblock %}
                 </div>
             </div>
         </section>

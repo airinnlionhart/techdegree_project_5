@@ -45,32 +45,34 @@
                         </div>
                     </article>
                 </div>
+                 {% block content %}
                  {% for items in entry %}
                     <div class="entry-list single">
                     <article>
-                        <h1>The best day I’ve ever had</h1>
-                        <time datetime="2016-01-31">{{ item.date }}</time>
+                        <h1>{{ items.title }}</h1>
+                        <time datetime="2016-01-31">{{ items.date }}</time>
                         <div class="entry">
                             <h3>Time Spent: </h3>
-                            <p>{{ item.timespent }}</p>
+                            <p>{{ items.timespent }}</p>
                         </div>
                         <div class="entry">
                             <h3>What I Learned:</h3>
-                            <p> {{ item.whatilearn }}</p>
+                            <p> {{ items.whatilearn }}</p>
                         </div>
                         <div class="entry">
                             <h3>Resources to Remember:</h3>
                             <ul>
-                                <li><a href="">{{ item.resourcestoremeber }}</a></li>
+                                <li><a href="">{{ items.resourcestoremeber }}</a></li>
                             </ul>
                         </div>
                     </article>
                 </div>
 
                 {% endfor %}
+                {% endblock %}
             </div>
             <div class="edit">
-                <p><a href="edit.html">Edit Entry</a></p>
+                <p><a href="http://127.0.0.1:5000/entries/{{items.journal_id}}/edit">Edit Entry</a></p>
             </div>
         </section>
         <footer>

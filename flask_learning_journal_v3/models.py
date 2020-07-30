@@ -36,19 +36,14 @@ def view_all():
         print(stuff)
 
 
-def edit():
-    view_all()
-    user_input = input("what journal entry would you like please select a number")
+def edit(entry):
 
-    for entries in Entry.select():
-        if str(entries.journal_id) == user_input:
-            user_text = input("Please enter your journal entry")
-            try:
-                Entry.update(journal_entry=user_text).where(Entry.journal_id == entries.journal_id).execute()
-            except:
-                print("something went wrong")
-        else:
-            pass
+    for items in entry:
+        try:
+            Entry.update(journal_entry=user_text).where(Entry.journal_id == entry.journal_id).execute()
+        except:
+            print("something went wrong")
+
 
 
 if __name__ == '__main__':
