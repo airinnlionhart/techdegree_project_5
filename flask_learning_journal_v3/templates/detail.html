@@ -50,7 +50,7 @@
                     <div class="entry-list single">
                     <article>
                         <h1>{{ items.title }}</h1>
-                        <time datetime="2016-01-31">{{ items.date }}</time>
+                        <time datetime="2016-01-31">{{ items.date.strftime("%B %d, %Y") }}</time>
                         <div class="entry">
                             <h3>Time Spent: </h3>
                             <p>{{ items.timespent }} Hours</p>

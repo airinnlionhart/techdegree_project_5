@@ -6,13 +6,14 @@ from peewee import IntegerField, TextField, DateTimeField, SqliteDatabase, Model
 DATABASE = SqliteDatabase('journal.db')
 
 
+
 class Entry(Model):
     journal_id = IntegerField(primary_key=True)
     title = TextField()
     timespent = IntegerField()
     whatilearn = TextField()
     resourcestoremember = TextField()
-    date = DateTimeField(default=datetime.datetime.now())
+    date = DateTimeField(default=datetime.datetime.now().strftime("%B %d, %Y"))
 
     class Meta:
         database = DATABASE
