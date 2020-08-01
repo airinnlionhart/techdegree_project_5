@@ -26,28 +26,30 @@ def after_request(response):
 
 @app.route('/')
 def index():
-    entry = models.Entry.select()
+    entry = models.Entry.select().order_by(models.Entry.date.desc())
     return render_template('index.html', entry=entry)
 
 
 @app.route('/entries')
 def entries():
-    entry = models.Entry.select()
+    entry = models.Entry.select().order_by(models.Entry.date.desc())
     return render_template('index.html', entry=entry)
 
 
 @app.route('/entries/new', methods=('GET','POST'))
 def new_entries():
-    form = forms.CreateEntryForm()
     try:
-        form.validate_on_submit()
+        form = forms.CreateEntryForm()
+        print(str(form.validate_on_submit()))
         models.Entry.add(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
                          resourcestoremember=form.ResourcesToRemember.data, date=form.date.data)
-        print("tried")
-        return render_template('new.html', form=form)
+        print("after add" + str(form.validate_on_submit()))
+        return redirect(url_for('index'))
     except:
         print("failed to validate form")
-    return render_template('new.html', form=form)
+        print(str(form.validate_on_submit()))
+    print(str(form.validate_on_submit()))
+    return render_template('new.html')
 
 
 @app.route('/entries/<id>')
@@ -58,6 +60,7 @@ def get_entries(id):
 
 @app.route('/entries/<id>/edit', methods=('GET','POST'))
 def edit_entries(id):
+
     form = forms.CreateEntryForm()
     entry = models.Entry.select().where(models.Entry.journal_id == id)
     try:
@@ -65,15 +68,23 @@ def edit_entries(id):
         print("at here")
         models.Entry.update(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
                      resourcestoremember=form.ResourcesToRemember.data, date=form.date.data).where(models.Entry.journal_id == id).execute()
-        return render_template('index.html', entry=entry, form=form)
+        return redirect(url_for('index'))
     except:
         print(entry)
         print("failed to validate form")
+        flash("something went wrong","error")
     return render_template('edit.html', entry=entry, form=form)
 
 @app.route('/entries/<id>/delete')
-def delete_entries():
-    return render_template('edit.html')
+def delete_entries(id):
+    entry = models.Entry.select().where(models.Entry.journal_id == id)
+    try:
+        models.Entry.delete().where(
+            models.Entry.journal_id == id).execute()
+        return redirect(url_for('index'))
+    except:
+        return redirect(url_for('index'), entry=entry)
+
 
 if __name__ == '__main__':
     models.initialize()

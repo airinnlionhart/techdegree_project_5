@@ -14,8 +14,8 @@
         <header>
             <div class="container">
                 <div class="site-header">
-                    <a class="logo" href="index.html"><i class="material-icons">library_books</i></a>
-                    <a class="button icon-right" href="new.html"><span>New Entry</span> <i class="material-icons">add</i></a>
+                    <a class="logo" href="/"><i class="material-icons">library_books</i></a>
+                    <a class="button icon-right" href="/entries/new"><span>New Entry</span> <i class="material-icons">add</i></a>
                 </div>
             </div>
         </header>
@@ -50,7 +50,7 @@
                     <div class="entry-list single">
                     <article>
                         <h1>{{ items.title }}</h1>
-                        <time datetime="2016-01-31">{{ items.date.strftime("%B %d, %Y") }}</time>
+                        <time datetime="{{ items.date.strftime('%B %d, %Y') }}">{{ items.date.strftime("%B %d, %Y") }}</time>
                         <div class="entry">
                             <h3>Time Spent: </h3>
                             <p>{{ items.timespent }} Hours</p>
@@ -71,7 +71,8 @@
 
             </div>
             <div class="edit">
-                <p><a href="http://127.0.0.1:5000/entries/{{items.journal_id}}/edit">Edit Entry</a></p>
+                <span><p><a href="/entries/{{items.journal_id}}/edit">Edit Entry</a>
+                    <a href="/entries/{{items.journal_id}}/delete">Delete Entry</a></p></span>
                 {% endfor %}
                 {% endblock %}
             </div>

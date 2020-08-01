@@ -14,7 +14,7 @@
         <header>
             <div class="container">
                 <div class="site-header">
-                    <a class="logo" href="index.html"><i class="material-icons">library_books</i></a>
+                    <a class="logo" href="/"><i class="material-icons">library_books</i></a>
                     <a class="button icon-right" href="/entries/new"><span>New Entry</span> <i class="material-icons">add</i></a>
                 </div>
             </div>
@@ -25,8 +25,8 @@
                     {% block content %}
                     {% for items in entry %}
                         <article>
-                            <h2><a href="http://127.0.0.1:5000/entries/{{items.journal_id}}">{{ items.title }}</a></h2>
-                            <time datetime="{{ items.date }}"></time>
+                            <h2><a href="/entries/{{items.journal_id}}">{{ items.title }}</a></h2>
+                            <time datetime="{{ items.date.strftime('%B %d, %Y') }}">{{ items.date.strftime("%B %d, %Y") }}</time>
                         </article>
                     {% endfor %}
                     {% endblock %}

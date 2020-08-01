@@ -14,8 +14,8 @@
         <header>
             <div class="container">
                 <div class="site-header">
-                    <a class="logo" href="index.html"><i class="material-icons">library_books</i></a>
-                    <a class="button icon-right" href="new.html"><span>New Entry</span> <i class="material-icons">add</i></a>
+                    <a class="logo" href="/"><i class="material-icons">library_books</i></a>
+                    <a class="button icon-right" href="/entries/new"><span>New Entry</span> <i class="material-icons">add</i></a>
                 </div>
             </div>
         </header>
@@ -24,7 +24,7 @@
                 <div class="new-entry">
                     <h2>New Entry</h2>
                     {% block content %}
-                    <form method="Post" action="" class="form">
+                    <form method="POST" action="" class="form">
                         <label for="journal_title"> Title</label>
                         <input id="journal_title" type="text" name="title" value="">
                         <label for="date_time">Date</label>

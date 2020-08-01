@@ -8,28 +8,21 @@ from optparse import OptionParser
 from peewee import *
 from peewee import print_
 from peewee import __version__ as peewee_version
-from playhouse.cockroachdb import CockroachDatabase
 from playhouse.reflection import *
 
+TEMPLATE = """from peewee import *%s
 
-HEADER = """from peewee import *%s
+database = %s('%s', **%s)
 
-database = %s('%s'%s)
-"""
+class UnknownField(object):
+    def __init__(self, *_, **__): pass
 
-BASE_MODEL = """\
 class BaseModel(Model):
     class Meta:
         database = database
 """
 
-UNKNOWN_FIELD = """\
-class UnknownField(object):
-    def __init__(self, *_, **__): pass
-"""
-
 DATABASE_ALIASES = {
-    CockroachDatabase: ['cockroach', 'cockroachdb', 'crdb'],
     MySQLDatabase: ['mysql', 'mysqldb'],
     PostgresqlDatabase: ['postgres', 'postgresql'],
     SqliteDatabase: ['sqlite', 'sqlite3'],
@@ -50,24 +43,14 @@ def make_introspector(database_type, database_name, **kwargs):
     db = DatabaseClass(database_name, **kwargs)
     return Introspector.from_database(db, schema=schema)
 
-def print_models(introspector, tables=None, preserve_order=False,
-                 include_views=False, ignore_unknown=False, snake_case=True):
-    database = introspector.introspect(table_names=tables,
-                                       include_views=include_views,
-                                       snake_case=snake_case)
+def print_models(introspector, tables=None, preserve_order=False):
+    database = introspector.introspect(table_names=tables)
 
-    db_kwargs = introspector.get_database_kwargs()
-    header = HEADER % (
+    print_(TEMPLATE % (
         introspector.get_additional_imports(),
         introspector.get_database_class().__name__,
         introspector.get_database_name(),
-        ', **%s' % repr(db_kwargs) if db_kwargs else '')
-    print_(header)
-
-    if not ignore_unknown:
-        print_(UNKNOWN_FIELD)
-
-    print_(BASE_MODEL)
+        repr(introspector.get_database_kwargs())))
 
     def _print_table(table, seen, accum=None):
         accum = accum or []
@@ -105,12 +88,7 @@ def print_models(introspector, tables=None, preserve_order=False,
                 # mark the columns as being primary keys.
                 column.primary_key = False
 
-            is_unknown = column.field_class is UnknownField
-            if is_unknown and ignore_unknown:
-                disp = '%s - %s' % (column.name, column.raw_column_type or '?')
-                print_('    # %s' % disp)
-            else:
-                print_('    %s' % column.get_field())
+            print_('    %s' % column.get_field())
 
         print_('')
         print_('    class Meta:')
@@ -168,23 +146,17 @@ def get_option_parser():
     ao('-P', '--password', dest='password', action='store_true')
     engines = sorted(DATABASE_MAP)
     ao('-e', '--engine', dest='engine', default='postgresql', choices=engines,
-       help=('Database type, e.g. sqlite, mysql, postgresql or cockroachdb. '
-             'Default is "postgresql".'))
+       help=('Database type, e.g. sqlite, mysql or postgresql. Default '
+             'is "postgresql".'))
     ao('-s', '--schema', dest='schema')
     ao('-t', '--tables', dest='tables',
        help=('Only generate the specified tables. Multiple table names should '
              'be separated by commas.'))
-    ao('-v', '--views', dest='views', action='store_true',
-       help='Generate model classes for VIEWs in addition to tables.')
     ao('-i', '--info', dest='info', action='store_true',
        help=('Add database information and other metadata to top of the '
              'generated file.'))
     ao('-o', '--preserve-order', action='store_true', dest='preserve_order',
        help='Model definition column ordering matches source table.')
-    ao('-I', '--ignore-unknown', action='store_true', dest='ignore_unknown',
-       help='Ignore fields whose type cannot be determined.')
-    ao('-L', '--legacy-naming', action='store_true', dest='legacy_naming',
-       help='Use legacy table- and column-name generation.')
     return parser
 
 def get_connect_kwargs(options):
@@ -200,6 +172,13 @@ if __name__ == '__main__':
 
     parser = get_option_parser()
     options, args = parser.parse_args()
+
+    if options.preserve_order:
+        try:
+            from collections import OrderedDict
+        except ImportError:
+            err('Preserve order requires Python >= 2.7.')
+            sys.exit(1)
 
     if len(args) < 1:
         err('Missing required parameter "database"')
@@ -219,5 +198,4 @@ if __name__ == '__main__':
         cmd_line = ' '.join(raw_argv[1:])
         print_header(cmd_line, introspector)
 
-    print_models(introspector, tables, options.preserve_order, options.views,
-                 options.ignore_unknown, not options.legacy_naming)
+    print_models(introspector, tables, preserve_order=options.preserve_order)
