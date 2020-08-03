@@ -5,7 +5,6 @@ from peewee import IntegerField, TextField, DateField, SqliteDatabase, Model
 DATABASE = SqliteDatabase('journal.db')
 
 
-
 class Entry(Model):
     journal_id = IntegerField(primary_key=True)
     title = TextField(null=False)
@@ -34,9 +33,6 @@ def view_all():
 
     for stuff in query:
         print(stuff)
-
-
-
 
 
 if __name__ == '__main__':

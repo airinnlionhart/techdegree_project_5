@@ -1,11 +1,10 @@
-from flask import Flask, g, render_template, flash, redirect, url_for
-#flask-1.1.2
+from flask import Flask, g, render_template, redirect, url_for
+# flask-1.1.2
 import forms
 import models
 from flask_wtf.csrf import CsrfProtect
 
 csrf = CsrfProtect()
-import datetime
 
 Debug = True
 
@@ -14,9 +13,8 @@ csrf.init_app(app)
 app.secret_key = "shrreasfass781!-adffa1"
 
 
-
 @app.before_request
-def befor_request():
+def before_request():
     """Connect to the Database before each request"""
     db = models.DATABASE
     db.connect()
@@ -41,7 +39,7 @@ def entries():
     return render_template('index.html', entry=entry)
 
 
-@app.route('/entries/new', methods=('GET','POST'))
+@app.route('/entries/new', methods=('GET', 'POST'))
 def new_entries():
     form = forms.CreateEntryForm()
     if form.validate_on_submit():
@@ -52,23 +50,23 @@ def new_entries():
         return render_template('new.html', form=form)
 
 
-
 @app.route('/entries/<id>')
 def get_entries(id):
     entry = models.Entry.select().where(models.Entry.journal_id == id)
     return render_template('detail.html', entry=entry)
 
 
-@app.route('/entries/<id>/edit', methods=('GET','POST'))
+@app.route('/entries/<id>/edit', methods=('GET', 'POST'))
 def edit_entries(id):
-
     form = forms.CreateEntryForm()
     entry = models.Entry.select().where(models.Entry.journal_id == id)
     if form.validate_on_submit():
         models.Entry.update(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
-                     resourcestoremember=form.ResourcesToRemember.data, date=form.date.data).where(models.Entry.journal_id == id).execute()
+                            resourcestoremember=form.ResourcesToRemember.data, date=form.date.data).where(
+            models.Entry.journal_id == id).execute()
         return redirect(url_for('index'))
     return render_template('edit.html', entry=entry, form=form)
+
 
 @app.route('/entries/<id>/delete')
 def delete_entries(id):
@@ -78,13 +76,8 @@ def delete_entries(id):
             models.Entry.journal_id == id).execute()
         return redirect(url_for('index'))
     except:
-        return redirect(url_for('index'), entry=entry)
+        return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
     models.initialize()
-
-
-
-
-
