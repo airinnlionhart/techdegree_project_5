@@ -29,18 +29,21 @@ def after_request(response):
 
 @app.route('/')
 def index():
+    """Home page for the site that will view all journal entries"""
     entry = models.Entry.select().order_by(models.Entry.date.desc())
     return render_template('index.html', entry=entry)
 
 
 @app.route('/entries')
 def entries():
+    """Home page for the site that will view all journal entries"""
     entry = models.Entry.select().order_by(models.Entry.date.desc())
     return render_template('index.html', entry=entry)
 
 
 @app.route('/entries/new', methods=('GET', 'POST'))
 def new_entries():
+    """Adds a new entry to the Entry models database"""
     form = forms.CreateEntryForm()
     if form.validate_on_submit():
         models.Entry.add(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
@@ -52,12 +55,14 @@ def new_entries():
 
 @app.route('/entries/<id>')
 def get_entries(id):
+    """Gets Entry model by journal id and displays it on detail.html"""
     entry = models.Entry.select().where(models.Entry.journal_id == id)
     return render_template('detail.html', entry=entry)
 
 
 @app.route('/entries/<id>/edit', methods=('GET', 'POST'))
 def edit_entries(id):
+    """Gets Entry model by journal id and allows you update it in the database"""
     form = forms.CreateEntryForm()
     entry = models.Entry.select().where(models.Entry.journal_id == id)
     if form.validate_on_submit():
@@ -70,6 +75,7 @@ def edit_entries(id):
 
 @app.route('/entries/<id>/delete')
 def delete_entries(id):
+    """Gets Entry model by journal id and allows you delete it in the database"""
     entry = models.Entry.select().where(models.Entry.journal_id == id)
     try:
         models.Entry.delete().where(

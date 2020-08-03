@@ -17,6 +17,7 @@ class Entry(Model):
         database = DATABASE
 
     @classmethod
+    """Add fields to a table in the database"""
     def add(cls, title, timespent, whatilearn, resourcestoremember, date):
         with DATABASE.transaction():
             cls.create(title=title, timespent=timespent,
@@ -29,6 +30,7 @@ def initialize():
 
 
 def view_all():
+    """A function when you run models.py that allows you to view all entries"""
     query = Entry.select().dicts()
 
     for stuff in query:
