@@ -1,5 +1,5 @@
 import datetime
-from peewee import IntegerField, TextField, DateTimeField, SqliteDatabase, Model
+from peewee import IntegerField, TextField, DateField, SqliteDatabase, Model
 #  peewee-3.13.3
 
 DATABASE = SqliteDatabase('journal.db')
@@ -12,7 +12,7 @@ class Entry(Model):
     timespent = IntegerField(null=False)
     whatilearn = TextField(null=False)
     resourcestoremember = TextField(null=False)
-    date = DateTimeField(default=datetime.datetime.now().strftime("%B %d, %Y"))
+    date = DateField(default=datetime.datetime.now().strftime("%B %d, %Y"))
 
     class Meta:
         database = DATABASE
@@ -42,5 +42,6 @@ def view_all():
 if __name__ == '__main__':
     initialize()
     view_all()
-    # Entry.add(title="Entered", timespent=1, whatilearn="things", resourcestoremember="more things",
-    #                  date="2020-07-30")
+    # Entry.add(title="What I Have Learned", timespent=100, whatilearn="This has been a journey I have learned so much from Team Treehouse. I have progessed not only in Python but as Developer all around",
+    #           resourcestoremember="This list would be so long but I hope to remember everything",
+    #                    date="2020-07-30")

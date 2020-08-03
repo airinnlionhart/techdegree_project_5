@@ -24,19 +24,70 @@
                 <div class="new-entry">
                     <h2>New Entry</h2>
                     {% block content %}
+                    {{ form.hidden_tag() }}
                     <form method="POST" action="" class="form">
+                        {{ form.csrf_token }}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
                         <label for="journal_title"> Title</label>
-                        <input id="journal_title" type="text" name="title" value="">
+                        {% if form.title.errors %}
+                            {% for error in form.title.errors %}
+                                <input class="error" id="journal_title" type="text" name="title" value="{{ error }}">
+                            {% endfor %}
+                        {% elif form.title.data != None %}
+                            <input id="journal_title" type="text" name="title" value="{{ form.title.data }}">
+                        {% else %}
+                            <input id="journal_title" type="text" name="title" value="">
+                        {% endif %}
+
                         <label for="date_time">Date</label>
-                        <input id="date_time" type="date" name="date"><br>
-                        <label for="time_spent"> Time Spent</label>
-                        <input id="time_spent" type="text" name="timeSpent"><br>
+                        {% if form.date.errors %}
+                            {% for error in form.date.errors %}
+                                {{ error }}
+                                <input class="error" id="date_time" type="date" name="date"><br>
+                            {% endfor %}
+                        {% else %}
+                            <input id="date_time" type="date" name="date"><br>
+                        {% endif %}
+
+
+
+                        <label for="time_spent" > Time Spent</label>
+                        {% if form.timeSpent.errors %}
+                            {% for error in form.timeSpent.errors %}
+                                <input class="error" id="time_spent" type="text" name="timeSpent" value="{{ error }}">
+                            {% endfor %}
+                        {% elif form.timeSpent.data != None %}
+                            <input id="time_spent" type="text" name="timeSpent" value="{{ form.timeSpent.data }}">
+                        {% else %}
+                            <input id="time_spent" type="text" name="timeSpent"><br>
+                        {% endif %}
+
                         <label for="learned">What I Learned</label>
-                        <textarea id="learned" rows="5" name="whatILearned"></textarea>
+                        {% if form.whatILearned.errors %}
+                            {% for error in form.whatILearned.errors %}
+                                <textarea class="error" id="learned" rows="5" name="whatILearned">{{ error }}</textarea>
+                            {% endfor %}
+                        {% elif form.whatILearned.data != None %}
+                            <textarea id="learned" rows="5" name="whatILearned">{{ form.whatILearned.data }}</textarea><br>
+                        {% else %}
+                            <textarea id="learned" rows="5" name="whatILearned"></textarea><br>
+                        {% endif %}
+
                         <label for="remember">Resources to Remember</label>
-                        <textarea id="remember" rows="5" name="ResourcesToRemember"></textarea>
+                        {% if form.ResourcesToRemember.errors %}
+                            {% for error in form.ResourcesToRemember.errors %}
+                                <textarea class="error" id="remember" rows="5" name="ResourcesToRemember">{{ error }}</textarea>
+                            {% endfor %}
+                        {% elif form.ResourcesToRemember.data != None %}
+                            <textarea id="remember" rows="5" name="ResourcesToRemember">{{ form.ResourcesToRemember.data }}</textarea><br>
+                        {% else %}
+                            <textarea id="remember" rows="5" name="ResourcesToRemember"></textarea><br>
+                        {% endif %}
+
+
                         <input type="submit"  id ="submit"   value="Publish Entry" class="button">
-                        <a href="#" class="button button-secondary">Cancel</a>
+                        <a href="/" class="button button-secondary">Cancel</a>
                     </form>
                     {% endblock %}
                 </div>

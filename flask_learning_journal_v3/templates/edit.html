@@ -25,8 +25,13 @@
                     {% block content %}
                     {% for items in entry %}
                     <h2>Edit Entry</h2>
-
+                    {% if form.errors %}
+                    {{ form.hidden_tag() }}
+                        {{ form.errors }}
+                     {% endif %}
+                    {{ form.hidden_tag() }}
                     <form method="Post" action="" class="form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <label for="journal_title"> Title</label>
                         <input id="journal_title" type="text" name="title" value="{{ items.title }}">
                         <label for="date_time">Date</label>
@@ -38,7 +43,7 @@
                         <label for="remember" >Resources to Remember</label>
                         <textarea id="remember" rows="5" name="ResourcesToRemember" >{{ items.resourcestoremember }}</textarea>
                         <input type="submit"  id ="submit"   value="Publish Entry" class="button">
-                        <a href="#" class="button button-secondary">Cancel</a>
+                        <a href="/" class="button button-secondary">Cancel</a>
                     </form>
                     {% endfor %}
                     {% endblock %}

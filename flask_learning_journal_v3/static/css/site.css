@@ -225,7 +225,9 @@ input[type=submit] {
 	margin-right: 5px;
 }
 
-
+.error{
+color:red
+}
 
 
 

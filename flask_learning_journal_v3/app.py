@@ -2,25 +2,30 @@ from flask import Flask, g, render_template, flash, redirect, url_for
 #flask-1.1.2
 import forms
 import models
+from flask_wtf.csrf import CsrfProtect
+
+csrf = CsrfProtect()
 import datetime
 
 Debug = True
 
 app = Flask(__name__)
+csrf.init_app(app)
 app.secret_key = "shrreasfass781!-adffa1"
+
 
 
 @app.before_request
 def befor_request():
     """Connect to the Database before each request"""
-    g.db = models.DATABASE
-    g.db.connect()
+    db = models.DATABASE
+    db.connect()
 
 
 @app.after_request
 def after_request(response):
     """Close the Database after each request"""
-    g.db.close()
+    models.DATABASE.close()
     return response
 
 
@@ -38,18 +43,14 @@ def entries():
 
 @app.route('/entries/new', methods=('GET','POST'))
 def new_entries():
-    try:
-        form = forms.CreateEntryForm()
-        print(str(form.validate_on_submit()))
+    form = forms.CreateEntryForm()
+    if form.validate_on_submit():
         models.Entry.add(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
                          resourcestoremember=form.ResourcesToRemember.data, date=form.date.data)
-        print("after add" + str(form.validate_on_submit()))
         return redirect(url_for('index'))
-    except:
-        print("failed to validate form")
-        print(str(form.validate_on_submit()))
-    print(str(form.validate_on_submit()))
-    return render_template('new.html')
+    else:
+        return render_template('new.html', form=form)
+
 
 
 @app.route('/entries/<id>')
@@ -63,16 +64,10 @@ def edit_entries(id):
 
     form = forms.CreateEntryForm()
     entry = models.Entry.select().where(models.Entry.journal_id == id)
-    try:
-        form.validate_on_submit()
-        print("at here")
+    if form.validate_on_submit():
         models.Entry.update(title=form.title.data, timespent=form.timeSpent.data, whatilearn=form.whatILearned.data,
                      resourcestoremember=form.ResourcesToRemember.data, date=form.date.data).where(models.Entry.journal_id == id).execute()
         return redirect(url_for('index'))
-    except:
-        print(entry)
-        print("failed to validate form")
-        flash("something went wrong","error")
     return render_template('edit.html', entry=entry, form=form)
 
 @app.route('/entries/<id>/delete')
