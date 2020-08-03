@@ -17,7 +17,6 @@ class Entry(Model):
         database = DATABASE
 
     @classmethod
-    """Add fields to a table in the database"""
     def add(cls, title, timespent, whatilearn, resourcestoremember, date):
         with DATABASE.transaction():
             cls.create(title=title, timespent=timespent,
