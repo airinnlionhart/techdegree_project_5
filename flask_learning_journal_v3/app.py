@@ -76,12 +76,11 @@ def edit_entries(id):
 @app.route('/entries/<id>/delete')
 def delete_entries(id):
     """Gets Entry model by journal id and allows you delete it in the database"""
-    entry = models.Entry.select().where(models.Entry.journal_id == id)
     try:
         models.Entry.delete().where(
             models.Entry.journal_id == id).execute()
         return redirect(url_for('index'))
-    except:
+    except models.DoesNotExist:
         return redirect(url_for('index'))
 
 
